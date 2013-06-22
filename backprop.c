@@ -5,16 +5,17 @@ float getOutput( float weightedSum ) {
     return tanh( weightedSum );
 }
 
-void weightedSums( Layer *inputLayer, Layer *currentLayer ) {
+void weightedSumsAndOutput( Layer *inputLayer, Layer *currentLayer ) {
     int i, j;
     Node *currentNode;
 
     for( i = 0; i < currentLayer->numNodes; ++i ) {
         currentNode = &currentLayer->nodes[i];
-        currentNode->output = 0.0;
+        currentNode->weightedSum = 0.0;
         for( j = 0; j < inputLayer->numNodes; ++j ) {
-            currentNode->output += currentNode->weights[j]  * inputLayer->nodes[j].output;
+            currentNode->weightedSum += currentNode->weights[j]  * inputLayer->nodes[j].output;
         }
+        currentNode->output = getOutput( currentNode->weightedSum );
     }
 }
 

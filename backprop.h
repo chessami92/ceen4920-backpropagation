@@ -1,6 +1,7 @@
 typedef struct {
     float *weights;
     float output;
+    float weightedSum;
     float error;
 } Node;
 
@@ -14,6 +15,6 @@ typedef struct {
     Layer *desiredOutputs;
 } TestCase;
 
-void weightedSums( Layer *inputLayer, Layer *currentLayer );
+void weightedSumsAndOutput( Layer *inputLayer, Layer *currentLayer );
 float getOutput( float weightedSum );
 void train( TestCase *testCase, Layer *hiddenLayer, Layer *outputLayer );
