@@ -39,9 +39,25 @@ static void weightedSumsAndOutput_test( void ) {
     assert( outputLayer.nodes[2].output == getOutput( 1.0 ) );
 }
 
+static void forwardPropagate_test() {
+    float hiddenWeights[2][2] = {{-1, 1}, {1, -1}};
+    float outputWeights[2] = {0.5, 0.25};
+    Node inputNodes[2];
+    Node hiddenNodes[2] = {{hiddenWeights[0]}, {hiddenWeights[1]}};
+    Node outputNode = {outputWeights};
+    Layer inputLayer = {inputNodes, 2};
+    Layer hiddenLayer = {hiddenNodes, 2};
+    Layer outputLayer = {&outputNode, 1};
+
+    inputLayer.nodes[0].output = 0.5; inputLayer.nodes[1].output = -0.5;
+    forwardPropagate( &inputLayer, &hiddenLayer, &outputLayer );
+    assert( fabs( -0.1881307 - outputLayer.nodes[0].output ) < 0.001 && "Output is not as expected" );
+}
+
 int main( void ) {
     getOutput_test();
     weightedSumsAndOutput_test();
+    forwardPropagate_test();
 
     return EXIT_SUCCESS;
 }

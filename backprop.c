@@ -19,6 +19,11 @@ void weightedSumsAndOutput( Layer *inputLayer, Layer *currentLayer ) {
     }
 }
 
+void forwardPropagate( Layer *inputLayer, Layer *hiddenLayer, Layer *outputLayer ) {
+    weightedSumsAndOutput( inputLayer, hiddenLayer );
+    weightedSumsAndOutput( hiddenLayer, outputLayer );
+}
+
 /*void updateWeights( TestCase *testCase, Vector *weights ) {
     float learningRate = 5;
     float in;
