@@ -2,7 +2,7 @@
 #include "backprop.h"
 
 float getOutput( float weightedSum ) {
-    return 2.0 / ( 1.0 + exp( -weightedSum ) ) - 1.0;
+    return tanh( weightedSum );
 }
 
 float weightedSum( Layer *inputLayer, Layer *currentLayer ) {
@@ -27,7 +27,7 @@ float weightedSum( Layer *inputLayer, Layer *currentLayer ) {
     in = weightedSum( testCase->inputs, weights );
     actualOutput = getOutput( in );
     error = testCase->desiredOutput - actualOutput;
-    derivative = 1 / ( 2 * powf( cosh( in / 2 ), 2 ) );
+    derivative = 1 / ( powf( cosh( in ), 2 ) );
 
     for( i = 0; i < weights->elements; ++i ) {
         weights->a[i] = weights->a[i] + learningRate * error * derivative * testCase->inputs->a[i];
