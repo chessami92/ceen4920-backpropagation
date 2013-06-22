@@ -21,7 +21,7 @@ static void getOutput_test( void ) {
     }
 }
 
-static void forwardPropagate_test( void ) {
+static void weightedSums_test( void ) {
     float layerWeights[3][3] = {{-1, -1, -1}, {1, 1, 1}, {-0.5, 0.5, 0.25}};
     Node inputNodes[3] = {{NULL, -1, 0}, {NULL, 0.5, 0}, {NULL, 1, 0}};
     Node outputNodes[3] = {{layerWeights[0], 0, 0},
@@ -30,7 +30,7 @@ static void forwardPropagate_test( void ) {
     Layer inputLayer = {inputNodes, 3};
     Layer outputLayer = {outputNodes, 3};
 
-    forwardPropagate( &inputLayer, &outputLayer );
+    weightedSums( &inputLayer, &outputLayer );
 
     assert( outputLayer.nodes[0].output == -0.5 && "Output should be -0.5" );
     assert( outputLayer.nodes[1].output == 0.5 && "Output should be 0.5" );
@@ -39,7 +39,7 @@ static void forwardPropagate_test( void ) {
 
 int main( void ) {
     getOutput_test();
-    forwardPropagate_test();
+    weightedSums_test();
 
     return EXIT_SUCCESS;
 }

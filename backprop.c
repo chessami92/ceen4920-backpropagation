@@ -5,7 +5,7 @@ float getOutput( float weightedSum ) {
     return tanh( weightedSum );
 }
 
-void forwardPropagate( Layer *inputLayer, Layer *currentLayer ) {
+void weightedSums( Layer *inputLayer, Layer *currentLayer ) {
     int i, j;
     Node *currentNode;
 
