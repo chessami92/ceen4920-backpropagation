@@ -24,6 +24,26 @@ void forwardPropagate( Layer *inputLayer, Layer *hiddenLayer, Layer *outputLayer
     weightedSumsAndOutput( hiddenLayer, outputLayer );
 }
 
+void backPropagate( Layer *hiddenLayer, Layer *outputLayer, Layer *desiredLayer ) {
+    Node *currentNode;
+    float *currentError;
+    int i, j;
+
+    for( i = 0; i < outputLayer->numNodes; ++i ) {
+        currentNode = &outputLayer->nodes[i];
+        currentNode->error = desiredLayer->nodes[i].output - currentNode->output;
+    }
+
+    for( i = 0; i < hiddenLayer->numNodes; ++i ) {
+        currentError = &hiddenLayer->nodes[i].error;
+        *currentError = 0;
+        for( j = 0; j < outputLayer->numNodes; ++j ) {
+            currentNode = &outputLayer->nodes[j];
+            *currentError += currentNode->error * currentNode->weights[i];
+        }
+    }
+}
+
 /*void updateWeights( TestCase *testCase, Vector *weights ) {
     float learningRate = 5;
     float in;

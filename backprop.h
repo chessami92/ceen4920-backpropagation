@@ -15,7 +15,8 @@ typedef struct {
     Layer *desiredOutputs;
 } TestCase;
 
+float getOutput( float weightedSum );
 void weightedSumsAndOutput( Layer *inputLayer, Layer *currentLayer );
 void forwardPropagate( Layer *inputLayer, Layer *hiddenLayer, Layer *outputLayer );
-float getOutput( float weightedSum );
+void backPropagate( Layer *hiddenLayer, Layer *outputLayer, Layer *desiredLayer );
 void train( TestCase *testCase, Layer *hiddenLayer, Layer *outputLayer );
