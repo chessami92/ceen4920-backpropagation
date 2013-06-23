@@ -92,12 +92,43 @@ static void updateWeights_test( void ) {
     assert( fabs( 0.2411686 - currentLayer.nodes[1].weights[1] ) < 0.001 && "Weight 1, 1 is not as expected" );
 }
 
+static void train_test( void ) {
+    float hiddenWeights[2][2] = {{randFloat() / 20, randFloat() / 20}, {randFloat() / 20, randFloat() / 20}};
+    float outputWeights[1][2] = {{randFloat() / 20, randFloat() / 20}};
+    Node inputNodes[2] = {{NULL, randFloat() * 2 -1}, {NULL, randFloat() * 2 - 1}};
+    Node hiddenNodes[2] = {{hiddenWeights[0]}, {hiddenWeights[1]}};
+    Node outputNodes[1] = {{outputWeights[0]}};
+    Node desiredOutputNodes[1] = {{NULL, randFloat() - 0.5}};
+    Layer inputLayer = {inputNodes, 2};
+    Layer hiddenLayer = {hiddenNodes, 2};
+    Layer outputLayer = {outputNodes, 1};
+    Layer desiredOutputLayer = {desiredOutputNodes, 1};
+    TestCase testCase = {&inputLayer, &desiredOutputLayer};
+
+    int i, j;
+    for( i = 0; i < 1000; ++i ) {
+        j = 0;
+        desiredOutputNodes[0].output = randFloat() - 0.5;
+        while( fabs( outputLayer.nodes[0].output - desiredOutputNodes[0].output ) > 0.01 ) {
+            train( &testCase, &hiddenLayer, &outputLayer );
+            if( j++ > 1000 ) {
+                printf( "Converged %d sets so far.\n", i -1 );
+                printf( "Desired Output: %f, Current Output: %f\n", desiredOutputNodes[0].output, outputLayer.nodes[0].output );
+                assert ( 1 == 0 && "Did not converge in a timely manner" );
+            }
+        }
+    }
+}
+
 int main( void ) {
+    initRand();
+
     getOutput_test();
     weightedSumsAndOutput_test();
     forwardPropagate_test();
     backPropagate_test();
     updateWeights_test();
+    train_test();
 
     return EXIT_SUCCESS;
 }

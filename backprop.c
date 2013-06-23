@@ -59,3 +59,9 @@ void updateWeights( Layer *inputLayer, Layer *currentLayer ) {
     }
 }
 
+void train( TestCase *testCase, Layer *hiddenLayer, Layer *outputLayer ) {
+    forwardPropagate( testCase->inputs, hiddenLayer, outputLayer );
+    backPropagate( hiddenLayer, outputLayer, testCase->desiredOutputs );
+    updateWeights( testCase->inputs, hiddenLayer );
+    updateWeights( hiddenLayer, outputLayer );
+}
