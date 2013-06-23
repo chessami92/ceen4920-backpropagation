@@ -35,6 +35,7 @@ static void makeNodes_test( void ) {
 
 static void makeLayer_test( void ) {
     Layer *layer;
+    int i;
 
     layer = makeLayer( 5, 4 );
     assert( layer && "Should have made a full layer" );
@@ -43,6 +44,10 @@ static void makeLayer_test( void ) {
 
     layer = makeLayer( -1, 1 );
     assert( !layer->nodes[0].weights && "Node should not have any weights" );
+
+    for( i = 0; i < MAX_LAYERS - 2; ++i ) {
+        assert( makeLayer( -1, 1 ) && "Should have made a full layer" );
+    }
     assert( !makeLayer( 1, 1 ) && "Should not be able to allocate a third layer" );
 }
 
