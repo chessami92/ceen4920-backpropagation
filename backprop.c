@@ -15,6 +15,8 @@ void weightedSumsAndOutput( Layer *inputLayer, Layer *currentLayer ) {
         for( j = 0; j < inputLayer->numNodes; ++j ) {
             currentNode->weightedSum += currentNode->weights[j]  * inputLayer->nodes[j].output;
         }
+        /* Propagate bias weight. */
+        currentNode->weightedSum += currentNode->weights[j];
         currentNode->output = getOutput( currentNode->weightedSum );
     }
 }
@@ -56,6 +58,8 @@ void updateWeights( Layer *inputLayer, Layer *currentLayer ) {
         for( j = 0; j < inputLayer->numNodes; ++j ) {
             currentNode->weights[j] += learningRate * currentNode->error * derivative * inputLayer->nodes[j].output;
         }
+        /* Calculate new bias weight. */
+        currentNode->weights[j] += learningRate * currentNode->error * derivative;
     }
 }
 
