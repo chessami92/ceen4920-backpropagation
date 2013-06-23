@@ -3,8 +3,8 @@ cc=gcc -o
 
 all: build
 
-build: main.c backprop.c random.c
-	$(cc) main main.c backprop.c random.c
+build: main.c backprop.c netBuilder.c random.c
+	$(cc) main main.c backprop.c netBuilder.c random.c
 
 run: build
 	./main.exe

@@ -5,4 +5,3 @@ Layer* makeLayer( int inputs, int nodes );
 #define MAX_WEIGHTS 100
 #define MAX_NODES 25
 #define MAX_LAYERS 10
-
