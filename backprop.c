@@ -44,21 +44,18 @@ void backPropagate( Layer *hiddenLayer, Layer *outputLayer, Layer *desiredLayer 
     }
 }
 
-/*void updateWeights( TestCase *testCase, Vector *weights ) {
-    float learningRate = 5;
-    float in;
-    float actualOutput;
-    float error;
+void updateWeights( Layer *inputLayer, Layer *currentLayer ) {
+    Node *currentNode;
+    static float learningRate = 0.5;
     float derivative;
-    int i;
+    int i, j;
 
-    in = weightedSum( testCase->inputs, weights );
-    actualOutput = getOutput( in );
-    error = testCase->desiredOutput - actualOutput;
-    derivative = 1 / ( powf( cosh( in ), 2 ) );
-
-    for( i = 0; i < weights->elements; ++i ) {
-        weights->a[i] = weights->a[i] + learningRate * error * derivative * testCase->inputs->a[i];
+    for( i = 0; i < currentLayer->numNodes; ++i ) {
+        currentNode = &currentLayer->nodes[i];
+        derivative = 1 / ( powf( cosh( currentNode->weightedSum ), 2 ) );
+        for( j = 0; j < inputLayer->numNodes; ++j ) {
+            currentNode->weights[j] += learningRate * currentNode->error * derivative * inputLayer->nodes[j].output;
+        }
     }
-}*/
+}
 

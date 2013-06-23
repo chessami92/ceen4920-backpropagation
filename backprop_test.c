@@ -77,11 +77,27 @@ static void backPropagate_test( void ) {
     assert( fabs( -0.0860857 - hiddenLayer.nodes[1].error ) < 0.001 && "Second node of hidden layer's output is not as expected" );
 }
 
+static void updateWeights_test( void ) {
+    float weights[2][2] = {{0.25, 0.5}, {-0.75, 0.25}};
+    Node inputNodes[2] = {{NULL, 1}, {NULL, -1}};
+    Node currentNodes[2] = {{weights[0], 0, 2, 0.5}, {weights[1], 0, -2, 0.25}};
+    Layer inputLayer = {inputNodes, 2};
+    Layer currentLayer = {currentNodes, 2};
+
+    updateWeights( &inputLayer, &currentLayer );
+
+    assert( fabs( 0.2676627 - currentLayer.nodes[0].weights[0] ) < 0.001 && "Weight 0, 0 is not as expected" );
+    assert( fabs( 0.4823373 - currentLayer.nodes[0].weights[1] ) < 0.001 && "Weight 0, 1 is not as expected" );
+    assert( fabs( -0.7411686 - currentLayer.nodes[1].weights[0] ) < 0.001 && "Weight 1, 0 is not as expected" );
+    assert( fabs( 0.2411686 - currentLayer.nodes[1].weights[1] ) < 0.001 && "Weight 1, 1 is not as expected" );
+}
+
 int main( void ) {
     getOutput_test();
     weightedSumsAndOutput_test();
     forwardPropagate_test();
     backPropagate_test();
+    updateWeights_test();
 
     return EXIT_SUCCESS;
 }
