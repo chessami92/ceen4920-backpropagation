@@ -32,12 +32,16 @@ Node* makeNodes( int inputs, int nodes ) {
         validPointer = NULL;
     } else {
         for( i = 0; i < nodes; ++i ) {
-            validPointer[i].weights = makeWeights( inputs + 1 );
-            if( !validPointer[i].weights ) {
-                fprintf( stderr, "ERROR: Allocated nodes, but couldn't allocate the weights on request for %d node(s).\n", nodes );
-                nodesConsumed = 0;
-                validPointer = NULL;
-                break;
+            if( inputs > 0 ) {
+                validPointer[i].weights = makeWeights( inputs );
+                if( !validPointer[i].weights ) {
+                    fprintf( stderr, "ERROR: Allocated nodes, but couldn't allocate the weights on request for %d node(s).\n", nodes );
+                    nodesConsumed = 0;
+                    validPointer = NULL;
+                    break;
+                }
+            } else {
+                validPointer[i].weights = NULL;
             }
         }
     }
@@ -56,7 +60,7 @@ Layer* makeLayer( int inputs, int nodes ) {
         layersConsumed = 0;
         validPointer = NULL;
     } else {
-        validPointer->nodes = makeNodes( inputs, nodes );
+        validPointer->nodes = makeNodes( inputs + 1, nodes );
         validPointer->numNodes = nodes;
     }
 

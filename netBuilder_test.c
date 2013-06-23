@@ -16,16 +16,21 @@ static void makeNodes_test( void ) {
     Node *nodeArray;
     int i;
 
-    nodeArray = makeNodes( 3, 25 );
+    nodeArray = makeNodes( 4, 25 );
     assert( nodeArray && "Should have allocated 25 nodes" );
     for( i = 0; i < 25; ++i ) {
         assert( nodeArray[i].weights && "Should have valid weights" );
     }
 
-    makeNodes( 1, 1 );
-    makeWeights( 1 );
+    assert( !makeNodes( 1, 1 ) && "Should have failed creation" );
+    assert( !makeWeights( 1 ) && "Should have failed creation" );
 
-    assert( !makeNodes( 4, 25) && "Should not be able to allocate" );
+    nodeArray = makeNodes( 0, 5 );
+    assert( nodeArray && "Should have allocated 5 nodes" );
+    for( i = 0; i < 5; ++i ) {
+        assert( !(nodeArray[i].weights) && "Should not have any weight array" );
+    }
+    assert( !makeNodes( 4, 25 ) && "Should not be able to allocate" );
 }
 
 static void makeLayer_test( void ) {
@@ -36,7 +41,8 @@ static void makeLayer_test( void ) {
     assert( layer->nodes && "Nodes should be a valid array" );
     assert( layer->numNodes == 4  && "Should have four nodes total" );
 
-    makeLayer( 1, 1 );
+    layer = makeLayer( -1, 1 );
+    assert( !layer->nodes[0].weights && "Node should not have any weights" );
     assert( !makeLayer( 1, 1 ) && "Should not be able to allocate a third layer" );
 }
 
