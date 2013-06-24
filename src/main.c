@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "backprop.h"
 #include "netBuilder.h"
+#include "random.h"
 
 char trainingFlag;
 FILE *definitionFile;
@@ -32,6 +33,7 @@ int processArguments( int argc, char *argv[] ) {
 
 int makeLayers( int *numInputs, Layer **hiddenLayer, Layer **outputLayer ) {
     int numHidden, numOutput;
+    int i, j;
     char throwAway[20];
 
     if( fscanf( definitionFile, "%s %d\n%s %d\n%s %d\n", throwAway, numInputs,
@@ -47,6 +49,26 @@ int makeLayers( int *numInputs, Layer **hiddenLayer, Layer **outputLayer ) {
 
     *hiddenLayer = makeLayer( *numInputs, numHidden );
     *outputLayer = makeLayer( numHidden, numOutput );
+
+    fscanf( definitionFile, "%s\n", throwAway );
+    for( i = 0; i < numHidden; ++i ) {
+        for( j = 0; j <= *numInputs; ++j ) {
+            fscanf( definitionFile, "%f ", &( *hiddenLayer )->nodes[i].weights[j] );
+            if( ( *hiddenLayer )->nodes[i].weights[j] == 0.0 ) {
+                ( *hiddenLayer )->nodes[i].weights[j] = randFloat() / 20;
+            }
+        }
+    }
+
+    fscanf( definitionFile, "%s\n", throwAway );
+    for( i = 0; i < numOutput; ++i ) {
+        for( j = 0; j <= numHidden; ++j ) {
+            fscanf( definitionFile, "%f ", &( *outputLayer )->nodes[i].weights[j] );
+            if( ( *outputLayer )->nodes[i].weights[j] == 0.0 ) {
+                ( *outputLayer )->nodes[i].weights[j] = randFloat() / 20;
+            }
+        }
+    }
 
     return 1;
 }
@@ -78,9 +100,43 @@ int persistAllWeights( int numInputs, Layer *hiddenLayer, Layer *outputLayer ) {
     return 1;
 }
 
+void getDefaultTestCase( int numInputs, int numOutputs, TestCase *testCase ) {
+    Layer *inputs, *outputs;
+
+    inputs = makeLayer( -1, numInputs );
+    outputs = makeLayer( -1, numOutputs );
+
+    testCase->inputs = inputs;
+    testCase->desiredOutputs = outputs;
+}
+
+void populateNextTestCase( TestCase *testCase ) {
+    int i;
+    char throwAway[5];
+
+    if( fscanf( inputFile, "%s\n", throwAway ) != 1 ) {
+        if( fseek( inputFile, 0, SEEK_SET ) != 0 ) {
+            return;
+        }
+        fscanf( inputFile, "%s\n", throwAway );
+    }
+
+    for( i = 0; i < testCase->inputs->numNodes; ++i ) {
+        fscanf( inputFile, " %f", &testCase->inputs->nodes[i].output );
+    }
+
+    for( i = 0; i < testCase->desiredOutputs->numNodes; ++i ) {
+        fscanf( inputFile, "%f", &testCase->desiredOutputs->nodes[i].output );
+    }
+}
+
 int main( int argc, char *argv[] ) {
     int numInputs;
     Layer *hiddenLayer, *outputLayer;
+    TestCase testCase;
+    int i;
+
+    initRand();
 
     if( !processArguments( argc, argv ) ) {
         fprintf( stderr, "Usage: main [-r, -t] [node definition file] [input file, training file]\n" );
@@ -89,6 +145,21 @@ int main( int argc, char *argv[] ) {
 
     if( !makeLayers( &numInputs, &hiddenLayer, &outputLayer ) ) {
         return EXIT_FAILURE;
+    }
+
+    getDefaultTestCase( numInputs, outputLayer->numNodes, &testCase );
+
+    if( trainingFlag ) {
+        for( i = 0; i < 1000000; ++i ) {
+            populateNextTestCase( &testCase );
+            train( &testCase, hiddenLayer, outputLayer );
+        }
+    } else {
+        for( i = 0; i < 4; ++i ) {
+            populateNextTestCase( &testCase );
+            forwardPropagate( testCase.inputs, hiddenLayer, outputLayer );
+            printf( "Inputs: %f, %f; Output: %f\n", testCase.inputs->nodes[0].output, testCase.inputs->nodes[1].output, outputLayer->nodes[0].output );
+        }
     }
 
     if( !persistAllWeights( numInputs, hiddenLayer, outputLayer ) ) {
