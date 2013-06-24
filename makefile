@@ -1,19 +1,29 @@
-# Which compiler and options to use.
-cc=gcc -o
+cc=gcc -Iinclude/ -o
+
+_DEPS = backprop.h netBuilder.h random.h
+DEPS = $(patsubst %,include/%,$(_DEPS))
+
+_SRC = backprop.c main.c netBuilder.c random.c
+SRC = $(patsubst %,src/%,$(_SRC))
+
+_TEST = backprop_test.c netBuilder_test.c
+TEST = $(patsubst %,test/%,$(_TEST))
 
 all: build
 
-build: main.c backprop.c netBuilder.c random.c
-	$(cc) main main.c backprop.c netBuilder.c random.c
+build: $(DEPS) $(SRC)
+	$(cc) main src/main.c src/backprop.c src/netBuilder.c src/random.c
 
 run: build
 	./main.exe
 
-test: backprop_test.c backprop.c random.c
-	$(cc) backprop_test backprop_test.c backprop.c random.c
-	$(cc) netBuilder_test netBuilder.c netBuilder_test.c
+test: $(DEPS) $(SRC) test/backprop_test.c
+	$(cc) backprop_test test/backprop_test.c src/backprop.c src/random.c
+	$(cc) netBuilder_test src/netBuilder.c test/netBuilder_test.c
 	./backprop_test
 	./netBuilder_test
 
 clean:
 	rm -f *.exe *.stackdump
+
+.PHONY: all build run test clean
