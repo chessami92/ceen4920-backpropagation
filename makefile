@@ -20,8 +20,10 @@ run: build
 test: $(DEPS) $(SRC) test/backprop_test.c
 	$(cc) backprop_test test/backprop_test.c src/backprop.c src/random.c
 	$(cc) netBuilder_test src/netBuilder.c test/netBuilder_test.c
+	$(cc) filePersistence_test src/filePersistence.c src/netBuilder.c src/random.c test/filePersistence_test.c
 	./backprop_test
 	./netBuilder_test
+	./filePersistence_test
 
 clean:
 	rm -f *.exe *.stackdump
