@@ -140,11 +140,11 @@ int main( int argc, char *argv[] ) {
 
     if( !processArguments( argc, argv ) ) {
         fprintf( stderr, "Usage: main [-r, -t] [node definition file] [input file, training file]\n" );
-        return EXIT_FAILURE;
+        exit( EXIT_FAILURE );
     }
 
     if( !makeLayers( &numInputs, &hiddenLayer, &outputLayer ) ) {
-        return EXIT_FAILURE;
+        exit( EXIT_FAILURE );
     }
 
     getDefaultTestCase( numInputs, outputLayer->numNodes, &testCase );
@@ -156,7 +156,7 @@ int main( int argc, char *argv[] ) {
         }
 
         if( !persistAllWeights( numInputs, hiddenLayer, outputLayer ) ) {
-            return EXIT_FAILURE;
+            exit( EXIT_FAILURE );
         }
     } else {
         for( i = 0; i < 4; ++i ) {
@@ -166,5 +166,5 @@ int main( int argc, char *argv[] ) {
         }
     }
 
-    return EXIT_SUCCESS;
+    exit( EXIT_SUCCESS );
 }
