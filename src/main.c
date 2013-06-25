@@ -55,7 +55,7 @@ int makeLayers( int *numInputs, Layer **hiddenLayer, Layer **outputLayer ) {
         for( j = 0; j <= *numInputs; ++j ) {
             fscanf( definitionFile, "%f ", &( *hiddenLayer )->nodes[i].weights[j] );
             if( ( *hiddenLayer )->nodes[i].weights[j] == 0.0 ) {
-                ( *hiddenLayer )->nodes[i].weights[j] = randFloat() / 20;
+                ( *hiddenLayer )->nodes[i].weights[j] = randFloat() * 2 - 1;
             }
         }
     }
@@ -78,7 +78,7 @@ void persistWeights( int numInputs, Layer *currentLayer ) {
 
     for( i = 0; i < currentLayer->numNodes; ++i ) {
         for( j = 0; j <= numInputs; ++j ) {
-            fprintf( definitionFile, "%f ", currentLayer->nodes[i].weights[j] );
+            fprintf( definitionFile, "%+f ", currentLayer->nodes[i].weights[j] );
         }
         fprintf( definitionFile, "\n" );
     }
@@ -89,7 +89,7 @@ int persistAllWeights( int numInputs, Layer *hiddenLayer, Layer *outputLayer ) {
         return 0;
     }
 
-    fprintf( definitionFile, "InputNodes: %d\nHiddenNodes %d\nOutputNodes: %d\n",
+    fprintf( definitionFile, "InputNodes: %d\nHiddenNodes: %d\nOutputNodes: %d\n",
         numInputs, hiddenLayer->numNodes, outputLayer->numNodes );
 
     fprintf( definitionFile, "HiddenLayer:\n" );
@@ -150,7 +150,7 @@ int main( int argc, char *argv[] ) {
     getDefaultTestCase( numInputs, outputLayer->numNodes, &testCase );
 
     if( trainingFlag ) {
-        for( i = 0; i < 1000000; ++i ) {
+        for( i = 0; i < 1000; ++i ) {
             populateNextTestCase( &testCase );
             train( &testCase, hiddenLayer, outputLayer );
         }

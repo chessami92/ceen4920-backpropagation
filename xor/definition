@@ -1,0 +1,8 @@
+InputNodes: 2
+HiddenNodes 2
+OutputNodes: 1
+HiddenLayer:
++3.000932 -3.001158 -2.912395 
+-2.962080 +2.961835 -2.873405 
+OutputLayer:
++2.764669 +2.765182 +2.665827 
