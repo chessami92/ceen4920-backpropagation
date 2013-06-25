@@ -154,16 +154,16 @@ int main( int argc, char *argv[] ) {
             populateNextTestCase( &testCase );
             train( &testCase, hiddenLayer, outputLayer );
         }
+
+        if( !persistAllWeights( numInputs, hiddenLayer, outputLayer ) ) {
+            return EXIT_FAILURE;
+        }
     } else {
         for( i = 0; i < 4; ++i ) {
             populateNextTestCase( &testCase );
             forwardPropagate( testCase.inputs, hiddenLayer, outputLayer );
             printf( "Inputs: %f, %f; Output: %f\n", testCase.inputs->nodes[0].output, testCase.inputs->nodes[1].output, outputLayer->nodes[0].output );
         }
-    }
-
-    if( !persistAllWeights( numInputs, hiddenLayer, outputLayer ) ) {
-        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
