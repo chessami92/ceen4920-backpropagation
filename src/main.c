@@ -8,6 +8,40 @@
 
 char trainingFlag;
 
+static int processArguments( int argc, char *argv[] ) {
+    if( argc < 4 ) {
+        return 0;
+    }
+
+    if( strcmp( argv[1], "-t" ) == 0 ) {
+        trainingFlag = 1;
+    } else if( strcmp( argv[1], "-r" ) == 0 ) {
+        trainingFlag = 0;
+    } else {
+        return 0;
+    }
+
+    if( !initPersistence( argc, argv ) || !initInput( argc, argv ) ) {
+        return 0;
+    }
+
+    return 1;
+}
+
+static void printTestResults( Layer *inputs, Layer *outputs ) {
+    int i;
+
+    printf( "Inputs: " );
+    for( i = 0; i < inputs->numNodes; ++i ) {
+        printf( "%f; ", inputs->nodes[i].output );
+    }
+    printf( "Outputs: " );
+    for( i = 0; i < outputs->numNodes; ++i ) {
+        printf( "%f; ", outputs->nodes[i].output );
+    }
+    printf( "\n" );
+}
+
 int main( int argc, char *argv[] ) {
     int numInputs;
     Layer *hiddenLayer, *outputLayer;
@@ -21,16 +55,9 @@ int main( int argc, char *argv[] ) {
         exit( EXIT_FAILURE );
     }
 
-    if( !buildLayers( &hiddenLayer, &outputLayer ) ) {
+    numInputs = buildLayers( &hiddenLayer, &outputLayer );
+    if( !numInputs ) {
         exit( EXIT_FAILURE );
-    }
-
-    if( strcmp( argv[1], "-t" ) == 0 ) {
-        trainingFlag = 1;
-    } else if( strcmp( argv[1], "-r" ) == 0 ) {
-        trainingFlag = 0;
-    } else {
-        return 0;
     }
 
     getDefaultTestCase( numInputs, outputLayer->numNodes, &testCase );
@@ -41,14 +68,13 @@ int main( int argc, char *argv[] ) {
             train( &testCase, hiddenLayer, outputLayer );
         }
 
-        if( !persistAllWeights( numInputs, hiddenLayer, outputLayer ) ) {
+        if( !persistWeights( numInputs, hiddenLayer, outputLayer ) ) {
             exit( EXIT_FAILURE );
         }
     } else {
-        for( i = 0; i < 4; ++i ) {
-            populateNextTestCase( &testCase );
+        while( populateNextTestCase( &testCase ) == NEW_INPUT ) {
             forwardPropagate( testCase.inputs, hiddenLayer, outputLayer );
-            printf( "Inputs: %f, %f; Output: %f\n", testCase.inputs->nodes[0].output, testCase.inputs->nodes[1].output, outputLayer->nodes[0].output );
+            printTestResults( testCase.inputs, outputLayer );
         }
     }
 

@@ -12,7 +12,7 @@ TEST = $(patsubst %,test/%,$(_TEST))
 all: build
 
 build: $(DEPS) $(SRC)
-	$(cc) main src/main.c src/backprop.c src/netBuilder.c src/random.c
+	$(cc) main src/main.c src/backprop.c src/netBuilder.c src/random.c src/filePersistence.c src/fileInput.c
 
 run: build
 	./main.exe
