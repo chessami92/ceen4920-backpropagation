@@ -4,38 +4,9 @@
 #include "netBuilder.h"
 #include "random.h"
 #include "persistence.h"
+#include "input.h"
 
-FILE *inputFile;
-
-void getDefaultTestCase( int numInputs, int numOutputs, TestCase *testCase ) {
-    Layer *inputs, *outputs;
-
-    inputs = makeLayer( -1, numInputs );
-    outputs = makeLayer( -1, numOutputs );
-
-    testCase->inputs = inputs;
-    testCase->desiredOutputs = outputs;
-}
-
-void populateNextTestCase( TestCase *testCase ) {
-    int i;
-    char throwAway[5];
-
-    if( fscanf( inputFile, "%s\n", throwAway ) != 1 ) {
-        if( fseek( inputFile, 0, SEEK_SET ) != 0 ) {
-            return;
-        }
-        fscanf( inputFile, "%s\n", throwAway );
-    }
-
-    for( i = 0; i < testCase->inputs->numNodes; ++i ) {
-        fscanf( inputFile, " %f", &testCase->inputs->nodes[i].output );
-    }
-
-    for( i = 0; i < testCase->desiredOutputs->numNodes; ++i ) {
-        fscanf( inputFile, "%f", &testCase->desiredOutputs->nodes[i].output );
-    }
-}
+char trainingFlag;
 
 int main( int argc, char *argv[] ) {
     int numInputs;
@@ -52,6 +23,14 @@ int main( int argc, char *argv[] ) {
 
     if( !buildLayers( &hiddenLayer, &outputLayer ) ) {
         exit( EXIT_FAILURE );
+    }
+
+    if( strcmp( argv[1], "-t" ) == 0 ) {
+        trainingFlag = 1;
+    } else if( strcmp( argv[1], "-r" ) == 0 ) {
+        trainingFlag = 0;
+    } else {
+        return 0;
     }
 
     getDefaultTestCase( numInputs, outputLayer->numNodes, &testCase );
