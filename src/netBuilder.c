@@ -66,3 +66,14 @@ Layer* makeLayer( int inputs, int nodes ) {
 
     return validPointer;
 }
+
+void getDefaultTestCase( int numInputs, int numOutputs, TestCase *testCase ) {
+    Layer *inputs, *outputs;
+
+    inputs = makeLayer( -1, numInputs );
+    outputs = makeLayer( -1, numOutputs );
+
+    testCase->inputs = inputs;
+    testCase->desiredOutputs = outputs;
+}
+

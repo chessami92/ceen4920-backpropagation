@@ -10,10 +10,6 @@ const int SEEK_FAILED = -1;
 FILE *inputFile;
 
 int initInput( int argc, char *argv[] ) {
-    if( argc < 4 ) {
-        return 0;
-    }
-
     inputFile = fopen( argv[3], "r" );
 
     if( !inputFile ) {
@@ -22,16 +18,6 @@ int initInput( int argc, char *argv[] ) {
     }
 
     return 1;
-}
-
-void getDefaultTestCase( int numInputs, int numOutputs, TestCase *testCase ) {
-    Layer *inputs, *outputs;
-
-    inputs = makeLayer( -1, numInputs );
-    outputs = makeLayer( -1, numOutputs );
-
-    testCase->inputs = inputs;
-    testCase->desiredOutputs = outputs;
 }
 
 static int populateLayer( Layer *currentLayer ) {
