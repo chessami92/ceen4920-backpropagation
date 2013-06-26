@@ -8,12 +8,13 @@ CORE = $(patsubst %,src/%,$(_CORE))
 
 _FILE_BASED = filePersistence.c fileInput.c
 FILE_BASED = $(patsubst %,src/%,$(_FILE_BASED))
+FILE_BASED_ARGS = file_based -DFLAG_REQUIRED=1,NUM_ARGS=4
 
 all:
-	@echo "Please enter a build type!"
+	@echo "Please enter a build type (file_based)!"
 
 file_based: $(SRC)
-	$(cc) file_based $(CORE) $(FILE_BASED)
+	$(cc) $(FILE_BASED_ARGS) $(CORE) $(FILE_BASED)
 
 test: $(SRC) $(TEST)
 	$(cc) backprop_test test/backprop_test.c src/backprop.c src/random.c

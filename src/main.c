@@ -9,10 +9,13 @@
 char trainingFlag;
 
 static int processArguments( int argc, char *argv[] ) {
-    if( argc < 4 ) {
+#ifdef NUM_ARGS
+    if( argc < NUM_ARGS ) {
         return 0;
     }
+#endif
 
+#ifdef FLAG_REQUIRED
     if( strcmp( argv[1], "-t" ) == 0 ) {
         trainingFlag = 1;
     } else if( strcmp( argv[1], "-r" ) == 0 ) {
@@ -20,6 +23,7 @@ static int processArguments( int argc, char *argv[] ) {
     } else {
         return 0;
     }
+#endif
 
     if( !initPersistence( argc, argv ) || !initInput( argc, argv ) ) {
         return 0;
