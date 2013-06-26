@@ -5,8 +5,10 @@
 #include "netBuilder.h"
 #include "persistence.h"
 
+static const char *testFile = "test_definition";
+
 static void initPersistence_test( void ) {
-    char *argv[4] = {"program", "option", "test_definition", "test_inputs" };
+    char *argv[4] = {"", "", testFile, "" };
     initPersistence( 4, argv );
 }
 
@@ -30,7 +32,6 @@ static void writeThenBuild_test( void ) {
 
     assert( hiddenLayer->nodes[0].weights[0] != 0.0 && "Zero weights should have been overwritten" );
 
-    remove( "test_definition" );
 }
 
 int main( void ) {
@@ -39,6 +40,8 @@ int main( void ) {
     build_test();
     initPersistence_test();
     writeThenBuild_test();
+
+    remove( testFile );
 
     exit( EXIT_SUCCESS );
 }

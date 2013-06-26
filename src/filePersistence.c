@@ -8,10 +8,6 @@
 char *fileName;
 
 int initPersistence( int argc, char *argv[] ) {
-    if( argc < 4 ) {
-        return 0;
-    }
-
     fileName = argv[2];
 
     return 1;
@@ -73,7 +69,7 @@ int buildLayers( Layer **hiddenLayer, Layer **outputLayer ) {
     }
 
     fclose( definitionFile );
-    return 1;
+    return numInputs;
 }
 
 static void persistLayerWeights( FILE *definitionFile, int numInputs, Layer *currentLayer ) {
