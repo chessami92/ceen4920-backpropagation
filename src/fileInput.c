@@ -30,26 +30,35 @@ void getDefaultTestCase( int numInputs, int numOutputs, TestCase *testCase ) {
     testCase->desiredOutputs = outputs;
 }
 
+static int populateLayer( Layer *currentLayer ) {
+    int i;
+
+    for( i = 0; i < currentLayer->numNodes; ++i ) {
+        if( !fscanf( inputFile, "%f", &currentLayer->nodes[i].output ) ) {
+            fprintf( stderr, "ERROR: Could not parse test case definitions.\n" );
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 int populateNextTestCase( TestCase *testCase ) {
-    int i, returnVal;
-    char throwAway[5];
+    int returnVal;
+    char *throwAway;
 
     returnVal = NEW_INPUT;
 
-    if( fscanf( inputFile, "%s\n", throwAway ) != 1 ) {
+    if( fscanf( inputFile, "\nEO%c", throwAway ) ) {
         if( fseek( inputFile, 0, SEEK_SET ) != 0 ) {
+            fprintf( stderr, "ERROR: Could not seek to beginning of input file.\n" );
             return SEEK_FAILED;
         }
-        fscanf( inputFile, "%s\n", throwAway );
         returnVal = INPUT_WRAPPED;
     }
 
-    for( i = 0; i < testCase->inputs->numNodes; ++i ) {
-        fscanf( inputFile, " %f", &testCase->inputs->nodes[i].output );
-    }
-
-    for( i = 0; i < testCase->desiredOutputs->numNodes; ++i ) {
-        fscanf( inputFile, "%f", &testCase->desiredOutputs->nodes[i].output );
+    if( !populateLayer( testCase->inputs ) || !populateLayer( testCase->desiredOutputs) ) {
+        return SEEK_FAILED;
     }
 
     return returnVal;
