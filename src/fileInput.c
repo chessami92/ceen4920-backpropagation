@@ -3,6 +3,10 @@
 #include "netBuilder.h"
 #include "input.h"
 
+const int NEW_INPUT = 1;
+const int INPUT_WRAPPED = 0;
+const int SEEK_FAILED = -1;
+
 FILE *inputFile;
 
 int initInput( int argc, char *argv[] ) {

@@ -5,11 +5,7 @@
 #include "backprop.h"
 #include "input.h"
 
-const int NEW_INPUT = 1;
-const int INPUT_WRAPPED = 0;
-const int SEEK_FAILED = -1;
-
-static char *testFile = "test_input";
+static const char *testFile = "test_input";
 
 static void initInput_test() {
     FILE *testInput;
