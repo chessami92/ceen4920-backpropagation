@@ -13,7 +13,7 @@ static void initPersistence_test( void ) {
 static void build_test( void ) {
     Layer *hiddenLayer, *outputLayer;
 
-    assert( buildLayers( &hiddenLayer, &outputLayer ) == 0 && "Cannot open nonexistant file" );
+    assert( buildLayers( &hiddenLayer, &outputLayer ) == 0 && "Cannot open nonexistent file" );
 }
 
 static void writeThenBuild_test( void ) {

@@ -5,7 +5,6 @@
 #include "persistence.h"
 #include "random.h"
 
-//char trainingFlag;
 char *fileName;
 
 int initPersistence( int argc, char *argv[] ) {
@@ -13,21 +12,12 @@ int initPersistence( int argc, char *argv[] ) {
         return 0;
     }
 
-/*    if( strcmp( argv[1], "-t" ) == 0 ) {
-        trainingFlag = 1;
-    } else if( strcmp( argv[1], "-r" ) == 0 ) {
-        trainingFlag = 0;
-    } else {
-        return 0;
-    }*/
-
     fileName = argv[2];
-//    inputFile = fopen( argv[3], "r" );
 
     return 1;
 }
 
-static void buildLayer( FILE *definitionFile, int numInputs, Layer *currentLayer ) {
+static int buildLayer( FILE *definitionFile, int numInputs, Layer *currentLayer ) {
     float *weights;
     int i, j;
 
@@ -44,6 +34,7 @@ static void buildLayer( FILE *definitionFile, int numInputs, Layer *currentLayer
         }
     }
 
+    return 1;
 }
 
 int buildLayers( Layer **hiddenLayer, Layer **outputLayer ) {
@@ -73,9 +64,13 @@ int buildLayers( Layer **hiddenLayer, Layer **outputLayer ) {
     *outputLayer = makeLayer( numHidden, numOutput );
 
     fscanf( definitionFile, "%s\n", throwAway );
-    buildLayer( definitionFile, numInputs, *hiddenLayer );
+    if( !buildLayer( definitionFile, numInputs, *hiddenLayer ) ) {
+        return 0;
+    }
     fscanf( definitionFile, "%s\n", throwAway );
-    buildLayer( definitionFile, numHidden, *outputLayer );
+    if( !buildLayer( definitionFile, numHidden, *outputLayer ) ) {
+        return 0;
+    }
 
     fclose( definitionFile );
     return 1;
