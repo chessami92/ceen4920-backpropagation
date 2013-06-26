@@ -16,7 +16,7 @@ all:
 file_based: $(SRC)
 	$(cc) $(FILE_BASED_ARGS) $(CORE) $(FILE_BASED)
 
-test: $(SRC) $(TEST)
+test_all: $(SRC) $(TEST)
 	$(cc) backprop_test test/backprop_test.c src/backprop.c src/random.c
 	$(cc) netBuilder_test src/netBuilder.c test/netBuilder_test.c
 	$(cc) filePersistence_test src/filePersistence.c src/netBuilder.c src/random.c test/filePersistence_test.c
