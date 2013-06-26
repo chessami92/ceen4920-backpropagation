@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "backprop.h"
-#include "netBuilder.h"
 #include "random.h"
 #include "persistence.h"
 #include "input.h"
