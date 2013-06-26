@@ -5,7 +5,7 @@
 #include "netBuilder.h"
 #include "persistence.h"
 
-static const char *testFile = "test_definition";
+static char *testFile = "test_definition";
 
 static void initPersistence_test( void ) {
     char *argv[4] = {"", "", testFile, "" };

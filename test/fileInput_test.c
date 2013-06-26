@@ -5,7 +5,7 @@
 #include "backprop.h"
 #include "input.h"
 
-static const char *testFile = "test_input";
+static char *testFile = "test_input";
 
 static void initInput_test() {
     FILE *testInput;
