@@ -1,29 +1,30 @@
 cc=gcc -Iinclude/ -o
 
-_DEPS = backprop.h netBuilder.h random.h
-DEPS = $(patsubst %,include/%,$(_DEPS))
+SRC = src/*.c include/*.h
+TEST = test/*.c
 
-_SRC = backprop.c main.c netBuilder.c random.c
-SRC = $(patsubst %,src/%,$(_SRC))
+_CORE = main.c backprop.c netBuilder.c random.c
+CORE = $(patsubst %,src/%,$(_CORE))
 
-_TEST = backprop_test.c netBuilder_test.c
-TEST = $(patsubst %,test/%,$(_TEST))
+_FILE_BASED = filePersistence.c fileInput.c
+FILE_BASED = $(patsubst %,src/%,$(_FILE_BASED))
+FILE_BASED_ARGS = file_based -DFLAG_REQUIRED=1,NUM_ARGS=4
 
-all: build
+all:
+	@echo "Please enter a build type (file_based)!"
 
-build: $(DEPS) $(SRC)
-	$(cc) main src/main.c src/backprop.c src/netBuilder.c src/random.c
+file_based: $(SRC)
+	$(cc) $(FILE_BASED_ARGS) $(CORE) $(FILE_BASED)
 
-run: build
-	./main.exe
-
-test: $(DEPS) $(SRC) test/backprop_test.c
+test_all: $(SRC) $(TEST)
 	$(cc) backprop_test test/backprop_test.c src/backprop.c src/random.c
 	$(cc) netBuilder_test src/netBuilder.c test/netBuilder_test.c
+	$(cc) filePersistence_test src/filePersistence.c src/netBuilder.c src/random.c test/filePersistence_test.c
+	$(cc) fileInput_test src/fileInput.c src/netBuilder.c test/fileInput_test.c
 	./backprop_test
 	./netBuilder_test
+	./filePersistence_test
+	./fileInput_test
 
 clean:
 	rm -f *.exe *.stackdump
-
-.PHONY: all build run test clean
