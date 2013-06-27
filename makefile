@@ -21,10 +21,12 @@ test_all: $(SRC) $(TEST)
 	$(cc) netBuilder_test src/netBuilder.c test/netBuilder_test.c
 	$(cc) filePersistence_test src/filePersistence.c src/netBuilder.c src/random.c test/filePersistence_test.c
 	$(cc) fileInput_test src/fileInput.c src/netBuilder.c test/fileInput_test.c
+	$(cc) trigInput_test src/trigInput.c src/netBuilder.c test/trigInput_test.c
 	./backprop_test
 	./netBuilder_test
 	./filePersistence_test
 	./fileInput_test
+	./trigInput_test
 
 clean:
 	rm -f *.exe *.stackdump
