@@ -13,7 +13,7 @@ int initInput( int argc, char *argv[] ) {
 static float nextValue( void ) {
     static float time = 0;
     time += 0.01;
-    return 0.5 * sin( 2 * M_PI * 10 * time );
+    return 0.5 * sin( 2 * M_PI * 10 * time ) + 0.25 * cos( 2 * M_PI  * 25 * time );
 }
 
 static void advanceInputs( Layer *inputs, float nextValue ) {

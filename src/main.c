@@ -31,17 +31,26 @@ static int processArguments( int argc, char *argv[] ) {
     return 1;
 }
 
-static void printTestResults( Layer *inputs, Layer *outputs ) {
+static void printLayer( char *identifier, Layer *layer ) {
     int i;
 
-    printf( "Inputs: " );
-    for( i = 0; i < inputs->numNodes; ++i ) {
-        printf( "%f; ", inputs->nodes[i].output );
+    printf( "%s", identifier );
+    for( i = 0; i < layer->numNodes; ++i ) {
+        printf( "%+f, ", layer->nodes[i].output );
     }
-    printf( "Outputs: " );
-    for( i = 0; i < outputs->numNodes; ++i ) {
-        printf( "%f; ", outputs->nodes[i].output );
-    }
+
+}
+
+static void printTestResults( Layer *inputs, Layer *outputs, Layer *desiredOutputs ) {
+#ifdef PRINT_INPUTS
+    printLayer( "Inputs, ", inputs );
+#endif
+#ifdef PRINT_OUTPUTS
+    printLayer( "Outputs, ", outputs );
+#endif
+#ifdef PRINT_DESIRED_OUTPUTS
+    printLayer( "Desired, ", desiredOutputs );
+#endif
     printf( "\n" );
 }
 
@@ -77,7 +86,7 @@ int main( int argc, char *argv[] ) {
     } else {
         while( populateNextTestCase( &testCase ) == NEW_INPUT ) {
             forwardPropagate( testCase.inputs, hiddenLayer, outputLayer );
-            printTestResults( testCase.inputs, outputLayer );
+            printTestResults( testCase.inputs, outputLayer, testCase.desiredOutputs );
         }
     }
 
