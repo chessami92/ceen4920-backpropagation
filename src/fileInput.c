@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "backprop.h"
-#include "netBuilder.h"
 #include "input.h"
 
 const int NEW_INPUT = 1;
